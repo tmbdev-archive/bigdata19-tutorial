@@ -1,0 +1,10 @@
+---
+- hosts: "{{ host | default('localhost')}}"
+  become: yes
+  become_method: sudo
+  tasks:
+    - shell: wget -nd https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
+    - shell: dpkg -i cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
+    - shell: apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+    - shell: apt-get update
+    - shell: apt-get install -y cuda

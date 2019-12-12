@@ -1,0 +1,40 @@
+---
+# Step 1: $ apt-get install ansible
+# Step 2: $ ansible-playbook docker-nv.yml
+- hosts: "localhost"
+  tasks:
+  - add_host: name="{{ host | default('localhost')}}"
+- hosts: "{{ host | default('localhost')}}"
+  become: yes
+  tasks:
+  - apt: name=docker state=absent
+  - apt: name=docker.io state=absent
+  # - shell: curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+  - shell: /etc/init.d/docker stop || true
+  - name: remove old docker dir
+    shell: test -d /var/lib/docker/. && mkdir /tmp/empty$$ && rsync -a --delete /tmp/empty$$/. /var/lib/docker/.
+  - name: install new docker
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+  - apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      state: present
+  - apt_key:
+      url: https://nvidia.github.io/nvidia-docker/gpgkey
+      state: present
+  - get_url:
+      url: https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list
+      dest: /etc/apt/sources.list.d/nvidia-docker.list
+  - apt: update_cache=yes upgrade=full # autoremove=yes purge=yes
+  - apt: name=docker-ce state=latest
+  - apt: name=nvidia-docker2 state=latest force=yes
+  - pip: name=nvidia-docker-compose state=latest
+  - shell: /etc/init.d/docker start
+  - apt: name=snapd state=latest
+  #- snap: name=microk8s
+  #- shell: microk8s.stop || true
+  #- shell: snap install --classic microk8s
+  #- shell: microk8s.start
+  #- pause: seconds=45
+  #- shell: microk8s.enable dns dashboard storage ingress gpu

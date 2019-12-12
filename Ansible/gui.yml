@@ -1,0 +1,23 @@
+---
+- hosts: "{{ host | default('localhost')}}"
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: GUI
+    apt:
+      state: latest
+      name:
+        - git-gui
+        - icewm
+        - imagemagick
+        - rxvt-unicode
+        - tigervnc-scraping-server
+        - tigervnc-standalone-server
+        - tigervnc-viewer
+        - tigervnc-xorg-extension
+        - ttf-ubuntu-font-family
+        - ttf-unifont
+        - vim-gtk
+        - xclip
+        - xterm
+    ignore_errors: true

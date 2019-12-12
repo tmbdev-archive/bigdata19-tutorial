@@ -1,0 +1,53 @@
+---
+- hosts: "{{ host | default('localhost')}}"
+  become: yes
+  vars:
+    version: "2019.10"
+  environment:
+    PATH: /opt/anaconda3/bin:/snap/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  tasks:
+    - stat: path=/opt/anaconda3/bin
+      register: anaconda3
+    - name: install anaconda3
+      block:
+        - apt:
+            name: "{{ item }}"
+            state: present
+          with_items:
+            - libgl1-mesa-glx
+            - libegl1-mesa
+            - libxrandr2
+            - libxss1
+            - libxcursor1
+            - libxcomposite1
+            - libasound2
+            - libxi6
+            - libxtst6
+        - name: downloading
+          get_url:
+            url: "https://repo.continuum.io/archive/Anaconda3-{{ version }}-Linux-x86_64.sh"
+            dest: /tmp/anaconda3.sh
+        - shell: rm -rf /opt/anaconda3
+        - shell: mkdir -p /opt
+        - name: unpacking
+          shell: bash /tmp/anaconda3.sh -b -p /opt/anaconda3
+        - shell: rm -rf /tmp/anaconda3.sh
+      when: anaconda3.stat.isdir is not defined
+    - name: update anaconda
+      shell: conda update -y --prefix /opt/anaconda3 anaconda
+    - name: packages
+      shell: conda install -y -c anaconda pip
+    - shell: conda install -y -c conda-forge jupyterlab
+    - shell: conda install -y -c conda-forge pyzmq
+    - shell: conda install -y -c conda-forge editdistance
+    - shell: conda install -y -c conda-forge braceexpand
+    - shell: conda install -y -c conda-forge rise
+    - shell: conda install -y -c conda-forge bash_kernel
+    - shell: conda install -y -c conda-forge scikit-image
+    - shell: conda install -y -c conda-forge scikit-learn
+    - shell: conda install -y pytorch torchvision cudatoolkit=10.1 -c pytorch
+    - shell: conda install -y -c conda-forge nvidia-apex
+    - shell: python3 -m pip install git+git://github.com/tmbdev/webdataset
+    - shell: python3 -m pip install git+git://github.com/tmbdev/torchmore
+    - shell: python3 -m pip install git+git://github.com/tmbdev/tarproc
+    - shell: python3 -m pip install git+git://github.com/NVlabs/tensorcom
