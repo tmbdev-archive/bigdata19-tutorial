@@ -1,5 +1,7 @@
 # Deep Learning on Big Data with Multi-Node GPU Jobs
 
+Tutorial held at IEEE BigData 2019
+
 Thomas Breuel, Alex Aizman
 
 Both traditional machine learning (clustering, decision trees, parametric models, cross-validation, function decompositions) and deep learning (DL) are often used for the analysis of big data on hundreds of nodes (clustered servers). However, the systems and I/O considerations for multi-node deep learning are quite different from traditional machine learning. While traditional machine learning is often well served by MapReduce style infrastructure (Hadoop, Spark), distributed deep learning places different demands on hardware, storage software, and networking infrastructure. In this tutorial, we cover: 
