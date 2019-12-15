@@ -6,7 +6,8 @@ Thomas Breuel, Alex Aizman
 
 Both traditional machine learning (clustering, decision trees, parametric models, cross-validation, function decompositions) and deep learning (DL) are often used for the analysis of big data on hundreds of nodes (clustered servers). However, the systems and I/O considerations for multi-node deep learning are quite different from traditional machine learning. While traditional machine learning is often well served by MapReduce style infrastructure (Hadoop, Spark), distributed deep learning places different demands on hardware, storage software, and networking infrastructure. In this tutorial, we cover: 
 
-- the structure and properties of large-scale GPU-based deep learning systems ● large-scale distributed stochastic gradient descent and supporting frameworks (PyTorch, TensorFlow, Horovod, NCCL) 
+- the structure and properties of large-scale GPU-based deep learning systems 
+- large-scale distributed stochastic gradient descent and supporting frameworks (PyTorch, TensorFlow, Horovod, NCCL) 
 - common storage and compression formats (TFRecord/tf.Example, DataLoader, etc.) and their interconnects (Ethernet, Infiniband, RDMA, NVLINK)
 - common storage architectures for large-scale DL (network file systems, distributed file systems, object storage) 
 - batch queueing systems, Kubernetes, and NGC for scheduling and large-scale parallelism 
